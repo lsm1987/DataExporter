@@ -148,3 +148,7 @@ static
 ## VS Code
 
 .vscode/
+
+## 테스트환경
+
+config_temp.json
