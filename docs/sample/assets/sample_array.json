@@ -1,0 +1,54 @@
+[
+    {
+        "id": 1,
+        "colArr": [
+            10,
+            11,
+            12
+        ],
+        "rowArr": [
+            20,
+            21,
+            22
+        ],
+        "structColArr": [
+            {
+                "name": "col0",
+                "value": 30
+            },
+            {
+                "name": "col1",
+                "value": 31
+            },
+            {
+                "name": "col2",
+                "value": 32
+            }
+        ],
+        "structRowArr": [
+            {
+                "name": "row0",
+                "value": 40
+            },
+            {
+                "name": "row1",
+                "value": 41
+            }
+        ]
+    },
+    {
+        "id": 2
+    },
+    {
+        "id": 3,
+        "colArr": [
+            110
+        ],
+        "structColArr": [
+            {
+                "name": "col0",
+                "value": 130
+            }
+        ]
+    }
+]

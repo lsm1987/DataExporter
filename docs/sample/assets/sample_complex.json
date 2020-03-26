@@ -1,0 +1,114 @@
+[
+    {
+        "id": "daily_stage_1",
+        "name": "불의 던전",
+        "openTimes": [
+            {
+                "dayOfWeek": "Monday",
+                "startTime": "06:00",
+                "endTime": "20:00"
+            },
+            {
+                "dayOfWeek": "Saturday",
+                "startTime": "00:00",
+                "endTime": "23:00"
+            }
+        ],
+        "rewards": [
+            {
+                "itemId": 1001,
+                "count": 1,
+                "condition": {
+                    "firstClear": true
+                },
+                "messages": [
+                    {
+                        "text": "최초 클리어 보상 획득!",
+                        "delay": 0.0
+                    },
+                    {
+                        "text": "영웅 보관함을 확인해주세요.",
+                        "delay": 1.5
+                    }
+                ]
+            },
+            {
+                "itemId": 2001,
+                "count": 1,
+                "condition": {
+                    "timeLimit": 300
+                },
+                "messages": [
+                    {
+                        "text": "제한시간 내 클리어 보상 획득!",
+                        "delay": 0.0
+                    }
+                ]
+            },
+            {
+                "itemId": 2001,
+                "count": 10
+            }
+        ],
+        "exp": {
+            "accountExp": 100,
+            "characterExp": 33
+        }
+    },
+    {
+        "id": "daily_stage_2",
+        "name": "물의 던전",
+        "openTimes": [
+            {
+                "dayOfWeek": "Tuesday",
+                "startTime": "06:00",
+                "endTime": "20:00"
+            },
+            {
+                "dayOfWeek": "Sunday",
+                "startTime": "00:00",
+                "endTime": "23:00"
+            }
+        ],
+        "rewards": [
+            {
+                "itemId": 1002,
+                "count": 1,
+                "condition": {
+                    "firstClear": true
+                },
+                "messages": [
+                    {
+                        "text": "최초 클리어 보상 획득!",
+                        "delay": 0.0
+                    },
+                    {
+                        "text": "영웅 보관함을 확인해주세요.",
+                        "delay": 1.5
+                    }
+                ]
+            },
+            {
+                "itemId": 2002,
+                "count": 1,
+                "condition": {
+                    "timeLimit": 300
+                },
+                "messages": [
+                    {
+                        "text": "제한시간 내 클리어 보상 획득!",
+                        "delay": 0.0
+                    }
+                ]
+            },
+            {
+                "itemId": 2002,
+                "count": 10
+            }
+        ],
+        "exp": {
+            "accountExp": 100,
+            "characterExp": 33
+        }
+    }
+]

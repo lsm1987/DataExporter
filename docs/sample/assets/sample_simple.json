@@ -1,0 +1,24 @@
+[
+    {
+        "id": 1,
+        "intVal": 10,
+        "floatVal": 11.1,
+        "strVal": "row1",
+        "boolVal": true
+    },
+    {
+        "id": 2,
+        "intVal": 20,
+        "floatVal": 22.2,
+        "strVal": "row2",
+        "boolVal": false
+    },
+    {
+        "id": 3
+    },
+    {
+        "id": 4,
+        "intVal": 40,
+        "floatVal": 44.4
+    }
+]
