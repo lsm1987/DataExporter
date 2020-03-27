@@ -29,7 +29,7 @@ pip install -r requirements.txt
 ## 사용 방법
 
 ### 엑셀 테이블, JSON 어셋 디렉토리 생성
-예) 테이블: docs/sample/tables
+예) 테이블: docs/sample/tables  
 예) 어셋: docs/sample/assets
 
 ### 설정 파일 생성
@@ -50,6 +50,7 @@ pip install -r requirements.txt
 | floatVal | float | 부동소수 |
 | strVal | string | 문자열 |
 | boolVal | bool | boolean |
+
 
 ### 엑셀 테이블 Data 시트에 데이터 입력
 | id | intVal | floatVal | strVal | boolVal |
