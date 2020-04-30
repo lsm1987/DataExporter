@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "sample_simple.table.json",
+    "title": "sample_simple",
+    "description": "단순 샘플 테이블",
+    
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": { "type": "integer" },
+            "intVal": { "type": "integer" },
+            "floatVal": { "type": "number" },
+            "strVal": { "type": "string" },
+            "boolVal": { "type": "boolean" }
+        },
+        "required": [ "id" ]
+    }
+}

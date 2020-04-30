@@ -1,6 +1,6 @@
 import sys
 import json
-from data_exporter import data_export
+from data_exporter import DataExporter
 
 # argv[1]: 설정 파일 경로
 def main():
@@ -12,10 +12,8 @@ def main():
         config_data = json.load(config_file)
         #print(config_data)
 
-        src_path = config_data["table_dir_path"]
-        dest_path = config_data["asset_dir_path"]
-
-        data_export(src_path, dest_path)
+        exporter = DataExporter(config_data)
+        exporter.run()
 
 if __name__ == '__main__':
     main()

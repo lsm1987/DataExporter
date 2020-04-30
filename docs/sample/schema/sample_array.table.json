@@ -1,0 +1,43 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "sample_array.table.json",
+    "title": "sample_array",
+    "description": "배열 샘플 테이블",
+    
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": { "type": "integer" },
+            "colArr" : {
+                "type": "array",
+                "items": { "type": "integer" }
+            },
+            "rowArr": {
+                "type": "array",
+                "items": { "type": "integer" }
+            },
+            "structColArr": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "name": { "type": "string" },
+                        "value": { "type": "integer" }
+                    }
+                }
+            },
+            "structRowArr": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "name": { "type": "string" },
+                        "value": { "type": "integer" }
+                    }
+                }
+            }
+        },
+        "required": [ "id" ]
+    }
+}
