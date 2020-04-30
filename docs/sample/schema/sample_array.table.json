@@ -10,14 +10,17 @@
         "properties": {
             "id": { "type": "integer" },
             "colArr" : {
+                "description": "열방향 배열",
                 "type": "array",
                 "items": { "type": "integer" }
             },
             "rowArr": {
+                "description": "행방향 배열",
                 "type": "array",
                 "items": { "type": "integer" }
             },
             "structColArr": {
+                "description": "구조체 열방향 배열",
                 "type": "array",
                 "items": {
                     "type": "object",
@@ -28,6 +31,7 @@
                 }
             },
             "structRowArr": {
+                "description": "구조체 행방향 배열",
                 "type": "array",
                 "items": {
                     "type": "object",

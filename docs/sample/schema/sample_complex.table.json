@@ -8,40 +8,44 @@
     "items": {
         "type": "object",
         "properties": {
-            "id": { "type": "string" },
-            "name": { "type": "string" },
+            "id": { "description": "ID", "type": "string" },
+            "name": { "description": "스테이지명", "type": "string" },
             "openTimes": {
+                "description": "개방 시간",
                 "type": "array",
                 "items": {
                     "type": "object",
                     "properties": {
-                        "dayOfWeek": { "type": "string" },
-                        "startTime": { "type": "string" },
-                        "endTime": { "type": "string" }
+                        "dayOfWeek": { "description": "요일", "type": "string" },
+                        "startTime": { "description": "입장 시작 시간", "type": "string" },
+                        "endTime": { "description": "입장 종료 시간", "type": "string" }
                     }
                 }
             },
             "rewards": {
+                "description": "보상 아이템 목록",
                 "type": "array",
                 "items": {
                     "type": "object",
                     "properties": {
-                        "itemId": { "type": "integer" },
-                        "count": { "type": "integer" },
+                        "itemId": { "description": "아이템 ID", "type": "integer" },
+                        "count": { "description": "아이템 수량", "type": "integer" },
                         "condition": {
+                            "description": "보상 획득 조건",
                             "type": "object",
                             "properties": {
-                                "firstClear": { "type": "boolean" },
-                                "timeLimit": { "type": "integer" }
+                                "firstClear": { "description": "최초 클리어", "type": "boolean" },
+                                "timeLimit": { "description": "클리어 시간 제한. 단위: 초", "type": "integer" }
                             }
                         },
                         "messages": {
+                            "description": "보상 획득 시 메시지",
                             "type": "array",
                             "items": {
                                 "type": "object",
                                 "properties": {
-                                    "text": { "type": "string" },
-                                    "delay": { "type": "number" }
+                                    "text": { "description": "메시지", "type": "string" },
+                                    "delay": { "description": "메시지 등장 딜레이. 단위: 초", "type": "number" }
                                 }
                             }
                         }
@@ -51,8 +55,8 @@
             "exp": {
                 "type": "object",
                 "properties": {
-                    "accountExp": { "type": "integer" },
-                    "characterExp": { "type": "integer" }
+                    "accountExp": { "description": "계정 경험치", "type": "integer" },
+                    "characterExp": { "description": "캐릭터 경험치", "type": "integer" }
                 }
             }
         },
