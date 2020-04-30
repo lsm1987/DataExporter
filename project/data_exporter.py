@@ -1,6 +1,7 @@
 import json
 import os
 from header_node import HeaderNode
+from jsonschema import Draft7Validator, RefResolver
 from loaded_node_object_info import LoadedNodeObjectInfo
 from openpyxl import load_workbook
 from type_node import TypeNode, TypeNodeParseType
@@ -24,27 +25,34 @@ class DataExporter:
                 self.export_table(table_name)
     
     def export_table(self, table_name):
-        type_info_root = self.create_type_info(table_name)
+        schema = self.load_schema(table_name)
+        Draft7Validator.check_schema(schema)
+
+        type_info_root = self.create_type_info(schema)
         #print(str(type_info_root))
 
         data = self.read_table(type_info_root, table_name)
         #print(data)
 
+        self.validate_table_data(data, schema)
+
         self.write_asset(data, table_name)
 
+    def load_schema(self, table_name):
+        schema_file_name = table_name + '.table.json'
+        schema_file_path = os.path.join(self.config.schema_dir_path, schema_file_name)
+
+        schema = None
+        with open(schema_file_path, 'r', encoding='UTF8') as fp:
+            schema = json.load(fp)
+        
+        return schema
 
     ##################################################
     # 타입 정보 생성
     ##################################################
 
-    def create_type_info(self, table_name):
-        schema_file_name = table_name + '.table.json'
-        schema_file_path = os.path.join(self.config.schema_dir_path, schema_file_name)
-        
-        schema = None
-        with open(schema_file_path, 'r', encoding='UTF8') as fp:
-            schema = json.load(fp)
-
+    def create_type_info(self, schema):
         root = self.create_type_node('_root', schema)
         return root
 
@@ -361,6 +369,18 @@ class DataExporter:
             return datas
         else:
             return None
+
+
+    ##################################################
+    # 테이블 데이터 유효성 검사
+    ##################################################
+
+    def validate_table_data(self, data, schema):
+        schema_dir_abs_path = os.path.abspath(self.config.schema_dir_path)
+        resolver = RefResolver('file:{}/'.format(schema_dir_abs_path), None)
+
+        validator = Draft7Validator(schema, resolver=resolver)
+        validator.validate(data)
 
 
     ##################################################
