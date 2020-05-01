@@ -13,14 +13,7 @@
             "openTimes": {
                 "description": "개방 시간",
                 "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "dayOfWeek": { "description": "요일", "type": "string" },
-                        "startTime": { "description": "입장 시작 시간", "type": "string" },
-                        "endTime": { "description": "입장 종료 시간", "type": "string" }
-                    }
-                }
+                "items": { "$ref": "struct.schema.json#/definitions/contentsOpenTime" }
             },
             "rewards": {
                 "description": "보상 아이템 목록",

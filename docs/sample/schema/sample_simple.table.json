@@ -12,7 +12,8 @@
             "intVal": { "type": "integer" },
             "floatVal": { "type": "number" },
             "strVal": { "type": "string" },
-            "boolVal": { "type": "boolean" }
+            "boolVal": { "type": "boolean" },
+            "enumVal": { "$ref": "enum.schema.json#/definitions/dayOfWeek" }
         },
         "required": [ "id" ]
     }

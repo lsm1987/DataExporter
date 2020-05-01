@@ -4,14 +4,16 @@
         "intVal": 10,
         "floatVal": 11.1,
         "strVal": "row1",
-        "boolVal": true
+        "boolVal": true,
+        "enumVal": "Monday"
     },
     {
         "id": 2,
         "intVal": 20,
         "floatVal": 22.2,
         "strVal": "row2",
-        "boolVal": false
+        "boolVal": false,
+        "enumVal": "Tuesday"
     },
     {
         "id": 3
