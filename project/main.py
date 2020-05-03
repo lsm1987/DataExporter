@@ -1,6 +1,6 @@
 import sys
 import json
-from data_exporter import DataExporter
+from exporter.data_exporter import DataExporter
 
 # argv[1]: 설정 파일 경로
 def main():
