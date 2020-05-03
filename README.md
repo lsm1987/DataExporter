@@ -15,8 +15,13 @@
 ## 환경설정
 
 ### 가상환경 생성
+* Windows
 ```sh
 python -m venv .env
+```
+* macOS
+```sh
+python3 -m venv .env
 ```
 
 ### 필요 패키지 설치
@@ -64,10 +69,18 @@ project\main.py 설정파일.json
 ```
 
 예) docs/sample 에서 가상환경을 통해 실행하는 경우
+* Windows
 ```sh
 call ..\..\.env\Scripts\activate.bat
 python ..\..\project\main.py config.json
 ```
+
+* macOS
+```sh
+source ../../.env/bin/activate
+python3 ../../project/main.py config.json
+```
+
 
 ### 변환 결과
 예) docs/sample/assets/sample_simple.json
