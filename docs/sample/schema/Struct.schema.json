@@ -1,13 +1,13 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "struct.schema.json",
+    "$id": "Struct.schema.json",
     
     "definitions" : {
-        "contentsOpenTime": {
+        "ContentsOpenTime": {
             "description": "컨텐츠 개방 시간",
             "type": "object",
             "properties": {
-                "dayOfWeek": { "description": "입장 요일", "$ref": "enum.schema.json#/definitions/dayOfWeek" },
+                "dayOfWeek": { "description": "입장 요일", "$ref": "Enum.schema.json#/definitions/DayOfWeek" },
                 "startTime": { "description": "입장 시작 시간", "type": "string" },
                 "endTime": { "description": "입장 종료 시간", "type": "string" }
             }

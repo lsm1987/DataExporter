@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "sample_complex.table.json",
-    "title": "sample_complex",
+    "$id": "SampleComplex.table.json",
+    "title": "SampleComplex",
     "description": "복합 샘플 테이블",
     
     "type": "array",
@@ -13,7 +13,7 @@
             "openTimes": {
                 "description": "개방 시간",
                 "type": "array",
-                "items": { "$ref": "struct.schema.json#/definitions/contentsOpenTime" }
+                "items": { "$ref": "Struct.schema.json#/definitions/ContentsOpenTime" }
             },
             "rewards": {
                 "description": "보상 아이템 목록",

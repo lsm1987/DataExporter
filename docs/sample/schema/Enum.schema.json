@@ -1,9 +1,9 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "enum.schema.json",
+    "$id": "Enum.schema.json",
     
     "definitions" : {
-        "dayOfWeek": {
+        "DayOfWeek": {
             "description": "요일",
             "type": "string",
             "enum": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
