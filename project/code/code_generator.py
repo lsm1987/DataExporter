@@ -17,11 +17,12 @@ class CodeGenerator:
     
     def run(self):
         for schema_file_name in os.listdir(self.config.schema_dir_path):
-            print(schema_file_name)
-            
-            file_schema = self.load_file_schema(schema_file_name)
-            code_file = self.create_code_file(schema_file_name, file_schema)
-            print(code_file.to_code())
+            if schema_file_name.endswith('.json'):
+                print(schema_file_name)
+                
+                file_schema = self.load_file_schema(schema_file_name)
+                code_file = self.create_code_file(schema_file_name, file_schema)
+                print(code_file.to_code())
         
         return
     
@@ -63,7 +64,7 @@ class CodeGenerator:
             self.parse_enum_code_block(block_name, block_schema, context)
         elif block_schema['type'] == 'object':
             self.parse_object_code_block(block_name, block_schema, context)
-        elif block_schema['type'] == 'array' and block_schema['items']['type'] == 'object':
+        elif block_schema['type'] == 'array':
             self.parse_code_block(block_name, block_schema['items'], context)
     
     def parse_enum_code_block(self, block_name, block_schema, context):
@@ -119,14 +120,23 @@ class CodeGenerator:
                 raise Exception('Nested array schema is not supported!')
             elif item_type == 'object':
                 context.push_path(property_name)
-                member_type = context.get_block_code_name()
+                member_type = '{}{}'.format(self.config.code_prefix, context.get_block_code_name())
+                context.pop_path()
+            elif item_type == 'string' and 'enum' in item_schema:
+                context.push_path(property_name)
+                member_type = '{}{}'.format(self.config.code_prefix, context.get_block_code_name())
                 context.pop_path()
             else:
                 member_type = self.determine_leaf_block_member_type(item_schema)
         
         elif property_type == 'object':
             context.push_path(property_name)
-            member_type = context.get_block_code_name()
+            member_type = '{}{}'.format(self.config.code_prefix, context.get_block_code_name())
+            context.pop_path()
+        
+        elif property_type == 'string' and 'enum' in property_schema:
+            context.push_path(property_name)
+            member_type = '{}{}'.format(self.config.code_prefix, context.get_block_code_name())
             context.pop_path()
 
         else:
