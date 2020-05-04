@@ -151,4 +151,4 @@ static
 
 ## 테스트환경
 
-config_temp.json
+temp/
