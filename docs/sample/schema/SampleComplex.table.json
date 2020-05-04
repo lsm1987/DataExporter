@@ -2,10 +2,10 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "SampleComplex.table.json",
     "title": "SampleComplex",
-    "description": "복합 샘플 테이블",
     
     "type": "array",
     "items": {
+        "description": "복합 샘플 테이블 항목",
         "type": "object",
         "properties": {
             "id": { "description": "ID", "type": "string" },
@@ -32,9 +32,10 @@
                             }
                         },
                         "messages": {
-                            "description": "보상 획득 시 메시지",
+                            "description": "보상 획득 시 메시지 목록",
                             "type": "array",
                             "items": {
+                                "description": "보상 획득 시 메시지",
                                 "type": "object",
                                 "properties": {
                                     "text": { "description": "메시지", "type": "string" },
