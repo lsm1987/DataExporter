@@ -1,5 +1,7 @@
 {
     "schema_dir_path": "schema",
     "table_dir_path": "tables",
-    "asset_dir_path": "assets"
+    "asset_dir_path": "assets",
+    "code_dir_path": "code",
+    "code_prefix": "DE"
 }
