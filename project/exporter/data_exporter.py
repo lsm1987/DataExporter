@@ -26,9 +26,10 @@ class DataExporter:
                 self.export_table(table_name)
     
     def export_table(self, table_name):
-        schema = self.load_table_schema(table_name)
+        schema_file_name = table_name + '.table.json'
+        schema = self.load_schema(schema_file_name, True)
 
-        type_info_root = self.create_type_info(schema)
+        type_info_root = self.create_type_info(schema, schema_file_name)
         #print(str(type_info_root))
 
         data = self.read_table(type_info_root, table_name)
@@ -55,20 +56,17 @@ class DataExporter:
 
         return schema
 
-    def load_table_schema(self, table_name):
-        schema_file_name = table_name + '.table.json'
-        return self.load_schema(schema_file_name, False)
 
     ##################################################
     # 타입 정보 생성
     ##################################################
 
-    def create_type_info(self, schema):
-        root = self.create_type_node('_root', schema)
+    def create_type_info(self, schema, current_schema_file_name):
+        root = self.create_type_node('_root', schema, current_schema_file_name)
         return root
 
-    def create_type_node(self, node_name, node_schema):
-        node_schema = self.resolve_schema_ref(node_schema)
+    def create_type_node(self, node_name, node_schema, current_schema_file_name):
+        node_schema, node_schema_file_name = self.resolve_schema_ref(node_schema, current_schema_file_name)
         node = TypeNode()
         node.name = node_name
 
@@ -77,20 +75,20 @@ class DataExporter:
         if node_type == 'array':
             node.is_array = True
             
-            item_schema = self.resolve_schema_ref(node_schema['items'])
+            item_schema, item_schema_file_name = self.resolve_schema_ref(node_schema['items'], node_schema_file_name)
             item_type = item_schema['type']
 
             if item_type == 'array':
                 raise Exception('Nested array schema is not supported!')
             elif item_type == 'object':
                 for item_property_name, item_property_schema in item_schema['properties'].items():
-                    node.add_member(self.create_type_node(item_property_name, item_property_schema))
+                    node.add_member(self.create_type_node(item_property_name, item_property_schema, item_schema_file_name))
             else:
                 node.parse_type = self.determine_leaf_node_parse_type(item_type)
         
         elif node_type == 'object':
             for node_property_name, node_property_schema in node_schema['properties'].items():
-                    node.add_member(self.create_type_node(node_property_name, node_property_schema))
+                    node.add_member(self.create_type_node(node_property_name, node_property_schema, node_schema_file_name))
         
         else:
             node.parse_type = self.determine_leaf_node_parse_type(node_type)
@@ -109,10 +107,14 @@ class DataExporter:
         else:
             return TypeNodeParseType.NONE
 
-    def resolve_schema_ref(self, schema):
+    # @return 참조 스키마, 참조 스키마가 있는 파일명
+    def resolve_schema_ref(self, schema, current_schema_file_name):
         if '$ref' in schema:
             ref_uri = schema['$ref']    # enum.schema.json#/definitions/dayOfWeek
             ref_schema_file_name, ref_schema_path = ref_uri.split('#')  # 'enum.schema.json', '/definitions/dayOfWeek'
+            
+            if len(ref_schema_file_name) == 0:
+                ref_schema_file_name = current_schema_file_name
             
             ref_schema = self.load_schema(ref_schema_file_name, True)
             
@@ -121,10 +123,10 @@ class DataExporter:
             for i in range(1, len(paths)):
                 ref_schema_node = ref_schema_node[paths[i]]
             
-            return self.resolve_schema_ref(ref_schema_node)
+            return self.resolve_schema_ref(ref_schema_node, ref_schema_file_name)
 
         else:
-            return schema
+            return schema, current_schema_file_name
 
     ##################################################
     # 엑셀 테이블을 데이터로 변환
