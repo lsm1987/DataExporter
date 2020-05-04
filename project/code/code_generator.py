@@ -54,18 +54,26 @@ class CodeGenerator:
         
         if 'definitions' in file_schema:
             for block_name, block_schema in file_schema['definitions'].items():
-                self.parse_code_block(block_name, block_schema, context)
+                self.parse_code_block(block_name, block_schema, False, context)
+        
+        # 문서 최상위 코드 블록은 테이블 Row 이므로 class 로 생성
+        self.parse_code_block(file_keyword, file_schema, True, context)
 
         code_file.blocks = context.blocks
         return code_file
     
-    def parse_code_block(self, block_name, block_schema, context):
-        if block_schema['type'] == 'string' and 'enum' in block_schema:
+    def parse_code_block(self, block_name, block_schema, is_class, context):
+        if not 'type' in block_schema:
+            return
+
+        block_type = block_schema['type']
+
+        if block_type == 'string' and 'enum' in block_schema:
             self.parse_enum_code_block(block_name, block_schema, context)
-        elif block_schema['type'] == 'object':
-            self.parse_object_code_block(block_name, block_schema, context)
-        elif block_schema['type'] == 'array':
-            self.parse_code_block(block_name, block_schema['items'], context)
+        elif block_type == 'object':
+            self.parse_object_code_block(block_name, block_schema, is_class, context)
+        elif block_type == 'array':
+            self.parse_code_block(block_name, block_schema['items'], is_class, context)
     
     def parse_enum_code_block(self, block_name, block_schema, context):
         context.push_path(block_name)
@@ -83,16 +91,17 @@ class CodeGenerator:
         context.blocks.append(enum_code_block)
         context.pop_path()
 
-    def parse_object_code_block(self, block_name, block_schema, context):
+    def parse_object_code_block(self, block_name, block_schema, is_class, context):
         context.push_path(block_name)
 
         object_code_block = ObjectCodeBlock()
         object_code_block.name = '{}{}'.format(self.config.code_prefix, context.get_block_code_name())
         object_code_block.comment = block_schema['description'] if 'description' in block_schema else ''
+        object_code_block.is_class = is_class
 
         for object_property_name, object_property_schema in block_schema['properties'].items():
             # Object property 가 block 화 가능하다면 수행
-            self.parse_code_block(object_property_name, object_property_schema, context)
+            self.parse_code_block(object_property_name, object_property_schema, False, context)
 
             object_member = ObjectCodeMember()
             object_member.name = object_property_name
