@@ -1,6 +1,6 @@
 class CodeFileFormatting:
     def __init__(self):
-        self.indent_string = '   '
+        self.indent_string = '    '
         self.line_sep = '\r\n'  # 플랫폼 무관하게 같은 문서 생성되어야 하므로 os.linesep 사용하지 않음
 
 class CodeFile:

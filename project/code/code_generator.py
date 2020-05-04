@@ -18,11 +18,11 @@ class CodeGenerator:
     def run(self):
         for schema_file_name in os.listdir(self.config.schema_dir_path):
             if schema_file_name.endswith('.json'):
-                print(schema_file_name)
+                #print(schema_file_name)
                 
                 file_schema = self.load_file_schema(schema_file_name)
                 code_file = self.create_code_file(schema_file_name, file_schema)
-                print(code_file.to_code())
+                self.write_code_file(code_file)
         
         return
     
@@ -196,6 +196,31 @@ class CodeGenerator:
             block_paths.append(path)
         
         return CodeGenerator.block_path_to_type(block_paths)
+
+    def write_code_file(self, code_file):
+        code_file_path = os.path.join(self.config.code_dir_path, code_file.name)
+
+        old_code = None
+
+        try:
+            with open(code_file_path, 'r', encoding='UTF8', newline='') as fp:
+                old_code = fp.read()
+        except FileNotFoundError:
+            pass
+
+        new_code = code_file.to_code()
+
+        write_status = ''
+
+        if old_code != new_code:
+            with open(code_file_path, 'w', encoding='UTF8', newline='') as fp:
+                fp.write(new_code)
+            write_status = 'Written'
+        else:
+            write_status = 'Skipped'
+
+        print('{}: {}'.format(code_file_path, write_status))
+
 
 class CodeGenerateContext:
     def __init__(self):
