@@ -44,8 +44,6 @@ class CodeGenerator:
     
     def create_code_file(self, schema_file_name, file_schema):
         context = CodeGenerateContext()
-        context.schema_file_name = schema_file_name
-
         code_file = CodeFile()
 
         # 예) Enum.schema.json -> DEEnum.generated.cs
@@ -79,7 +77,7 @@ class CodeGenerator:
         context.push_path(block_name)
 
         enum_code_block = EnumCodeBlock()
-        enum_code_block.name = '{}{}'.format(self.config.code_prefix, context.get_block_code_name())
+        enum_code_block.name = '{}{}'.format(self.config.code_prefix, CodeGenerator.block_path_to_type(context.current_block_path))
         enum_code_block.comment = block_schema['description'] if 'description' in block_schema else ''
 
         for enum_member_name in block_schema['enum']:
@@ -95,7 +93,7 @@ class CodeGenerator:
         context.push_path(block_name)
 
         object_code_block = ObjectCodeBlock()
-        object_code_block.name = '{}{}'.format(self.config.code_prefix, context.get_block_code_name())
+        object_code_block.name = '{}{}'.format(self.config.code_prefix, CodeGenerator.block_path_to_type(context.current_block_path))
         object_code_block.comment = block_schema['description'] if 'description' in block_schema else ''
         object_code_block.is_class = is_class
 
@@ -117,35 +115,35 @@ class CodeGenerator:
         member_type = ''
         member_is_array = False
 
-        property_type = property_schema['type']
+        property_type = property_schema['type'] if 'type' in property_schema else ''
 
         if property_type == 'array':
             member_is_array = True
 
             item_schema = property_schema['items']
-            item_type = item_schema['type']
+            item_type = item_schema['type'] if 'type' in item_schema else ''
 
             if item_type == 'array':
                 raise Exception('Nested array schema is not supported!')
             elif item_type == 'object':
                 context.push_path(property_name)
-                member_type = '{}{}'.format(self.config.code_prefix, context.get_block_code_name())
+                member_type = '{}{}'.format(self.config.code_prefix, CodeGenerator.block_path_to_type(context.current_block_path))
                 context.pop_path()
             elif item_type == 'string' and 'enum' in item_schema:
                 context.push_path(property_name)
-                member_type = '{}{}'.format(self.config.code_prefix, context.get_block_code_name())
+                member_type = '{}{}'.format(self.config.code_prefix, CodeGenerator.block_path_to_type(context.current_block_path))
                 context.pop_path()
             else:
                 member_type = self.determine_leaf_block_member_type(item_schema)
         
         elif property_type == 'object':
             context.push_path(property_name)
-            member_type = '{}{}'.format(self.config.code_prefix, context.get_block_code_name())
+            member_type = '{}{}'.format(self.config.code_prefix, CodeGenerator.block_path_to_type(context.current_block_path))
             context.pop_path()
         
         elif property_type == 'string' and 'enum' in property_schema:
             context.push_path(property_name)
-            member_type = '{}{}'.format(self.config.code_prefix, context.get_block_code_name())
+            member_type = '{}{}'.format(self.config.code_prefix, CodeGenerator.block_path_to_type(context.current_block_path))
             context.pop_path()
 
         else:
@@ -154,21 +152,53 @@ class CodeGenerator:
         return member_type, member_is_array
     
     def determine_leaf_block_member_type(self, property_schema):
-        property_type = property_schema['type']
-        if property_type == 'integer':
-            return 'int'
-        elif property_type == 'number':
-            return 'float'
-        elif property_type == 'boolean':
-            return 'bool'
-        elif property_type == 'string':
-            return 'string'
+        if 'type' in property_schema:
+            property_type = property_schema['type']
+            if property_type == 'integer':
+                return 'int'
+            elif property_type == 'number':
+                return 'float'
+            elif property_type == 'boolean':
+                return 'bool'
+            elif property_type == 'string':
+                return 'string'
+            else:
+                raise Exception('Not supported leaf property type! type: {}'.format(property_type))
+        
+        elif '$ref' in property_schema:
+            return '{}{}'.format(self.config.code_prefix, CodeGenerator.ref_to_type(property_schema['$ref']))
+        
         else:
-            raise Exception('Not supported leaf property type! type: {}'.format(property_type))
+            raise Exception('Not supported leaf block member type!')
+
+    @staticmethod
+    def block_path_to_type(block_path):
+        text = ''
+
+        for idx, node in enumerate(block_path):
+            if idx != 0:
+                text += '_'
+            
+            text += node[:1].upper() + node[1:]
+        
+        return text
+
+    @staticmethod
+    def ref_to_type(ref_uri):
+        # ref_uri: Enum.schema.json#/definitions/dayOfWeek
+        ref_schema_path = ref_uri.split('#')[1]  # '/definitions/dayOfWeek'
+        paths = ref_schema_path.split('/') # ['', 'definitions', 'dayOfWeek']
+
+        block_paths = []
+        for path in paths:
+            if len(path) == 0 or path == 'definitions' or path == 'properties' or path == 'items':
+                continue
+            block_paths.append(path)
+        
+        return CodeGenerator.block_path_to_type(block_paths)
 
 class CodeGenerateContext:
     def __init__(self):
-        self.schema_file_name = ''
         self.current_block_path = [] #예) ['ContentsOpenTime', 'structVal']
         self.blocks = [] # CodeBlock[]
     
@@ -177,14 +207,3 @@ class CodeGenerateContext:
     
     def pop_path(self):
         self.current_block_path.pop()
-    
-    def get_block_code_name(self):
-        text = ''
-
-        for idx, node in enumerate(self.current_block_path):
-            if idx != 0:
-                text += '_'
-            
-            text += node[:1].upper() + node[1:]
-        
-        return text
