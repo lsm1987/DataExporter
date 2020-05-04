@@ -2,7 +2,17 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "SampleComplex.table.json",
     "title": "SampleComplex",
-    
+
+    "definitions" : {
+        "ContentsExp": {
+            "type": "object",
+            "properties": {
+                "accountExp": { "description": "계정 경험치", "type": "integer" },
+                "characterExp": { "description": "캐릭터 경험치", "type": "integer" }
+            }
+        }
+    },
+
     "type": "array",
     "items": {
         "description": "복합 샘플 테이블 항목",
@@ -46,13 +56,7 @@
                     }
                 }
             },
-            "exp": {
-                "type": "object",
-                "properties": {
-                    "accountExp": { "description": "계정 경험치", "type": "integer" },
-                    "characterExp": { "description": "캐릭터 경험치", "type": "integer" }
-                }
-            }
+            "exp": { "$ref": "#/definitions/ContentsExp" }
         },
         "required": [ "id" ]
     }

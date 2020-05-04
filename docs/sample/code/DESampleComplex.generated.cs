@@ -1,5 +1,18 @@
 using System.Collections.Generic;
 
+public struct DEContentsExp
+{
+    /// <summary>
+    /// 계정 경험치
+    /// </summary>
+    public int accountExp;
+
+    /// <summary>
+    /// 캐릭터 경험치
+    /// </summary>
+    public int characterExp;
+}
+
 /// <summary>
 /// 보상 획득 조건
 /// </summary>
@@ -55,19 +68,6 @@ public struct DESampleComplex_Rewards
     public List<DESampleComplex_Rewards_Messages> messages;
 }
 
-public struct DESampleComplex_Exp
-{
-    /// <summary>
-    /// 계정 경험치
-    /// </summary>
-    public int accountExp;
-
-    /// <summary>
-    /// 캐릭터 경험치
-    /// </summary>
-    public int characterExp;
-}
-
 /// <summary>
 /// 복합 샘플 테이블 항목
 /// </summary>
@@ -93,5 +93,5 @@ public class DESampleComplex
     /// </summary>
     public List<DESampleComplex_Rewards> rewards;
 
-    public DESampleComplex_Exp exp;
+    public DEContentsExp exp;
 }
