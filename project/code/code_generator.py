@@ -118,6 +118,7 @@ class CodeGenerator:
         property_type = property_schema['type'] if 'type' in property_schema else ''
 
         if property_type == 'array':
+            # TODO: array 는 값 미지정 시 빈 array 생성하면 되므로 nullable 대응하지 않음. schema 로 체크할 수 있다면 수정 - lsm1987
             member_is_array = True
 
             item_schema = property_schema['items']
@@ -126,25 +127,17 @@ class CodeGenerator:
             if item_type == 'array':
                 raise Exception('Nested array schema is not supported!')
             elif item_type == 'object':
-                context.push_path(property_name)
-                member_type = '{}{}'.format(self.config.code_prefix, CodeGenerator.block_path_to_type(context.current_block_path))
-                context.pop_path()
+                member_type = self.determine_object_block_member_type(property_name, item_schema, context)
             elif item_type == 'string' and 'enum' in item_schema:
-                context.push_path(property_name)
-                member_type = '{}{}'.format(self.config.code_prefix, CodeGenerator.block_path_to_type(context.current_block_path))
-                context.pop_path()
+                member_type = self.determine_object_block_member_type(property_name, item_schema, context)
             else:
                 member_type = self.determine_leaf_block_member_type(item_schema)
         
         elif property_type == 'object':
-            context.push_path(property_name)
-            member_type = '{}{}'.format(self.config.code_prefix, CodeGenerator.block_path_to_type(context.current_block_path))
-            context.pop_path()
-        
+            member_type = self.determine_object_block_member_type(property_name, property_schema, context)
+
         elif property_type == 'string' and 'enum' in property_schema:
-            context.push_path(property_name)
-            member_type = '{}{}'.format(self.config.code_prefix, CodeGenerator.block_path_to_type(context.current_block_path))
-            context.pop_path()
+            member_type = self.determine_object_block_member_type(property_name, property_schema, context)
 
         else:
             member_type = self.determine_leaf_block_member_type(property_schema)
@@ -152,24 +145,44 @@ class CodeGenerator:
         return member_type, member_is_array
     
     def determine_leaf_block_member_type(self, property_schema):
+        type_name = ''
+
         if 'type' in property_schema:
-            property_type = property_schema['type']
-            if property_type == 'integer':
-                return 'int'
-            elif property_type == 'number':
-                return 'float'
-            elif property_type == 'boolean':
-                return 'bool'
-            elif property_type == 'string':
-                return 'string'
+            property_type_value = property_schema['type']
+            if property_type_value == 'integer':
+                type_name = 'int'
+            elif property_type_value == 'number':
+                type_name = 'float'
+            elif property_type_value == 'boolean':
+                type_name = 'bool'
+            elif property_type_value == 'string':
+                type_name = 'string'
             else:
-                raise Exception('Not supported leaf property type! type: {}'.format(property_type))
+                raise Exception('Not supported leaf property type! property_type_value: {}'.format(property_type_value))
         
         elif '$ref' in property_schema:
-            return '{}{}'.format(self.config.code_prefix, CodeGenerator.ref_to_type(property_schema['$ref']))
+            type_name = '{}{}'.format(self.config.code_prefix, CodeGenerator.ref_to_type(property_schema['$ref']))
         
         else:
             raise Exception('Not supported leaf block member type!')
+
+        # TODO: C# 에서 string 에는 '?' 붙일 수 없음. schema 로 체크할 수 있다면 수정 - lsm1987
+        if 'nullable' in property_schema and property_schema['nullable']:
+            type_name += '?'
+        
+        return type_name
+
+    def determine_object_block_member_type(self, property_name, property_schema, context):
+        context.push_path(property_name)
+        
+        type_name = '{}{}'.format(self.config.code_prefix, CodeGenerator.block_path_to_type(context.current_block_path))
+        
+        if 'nullable' in property_schema and property_schema['nullable']:
+            type_name += '?'
+        
+        context.pop_path()
+
+        return type_name
 
     @staticmethod
     def block_path_to_type(block_path):
