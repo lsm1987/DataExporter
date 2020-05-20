@@ -91,7 +91,7 @@ class ObjectCodeMember():
 class ObjectCodeBlock(CodeBlock):
     def __init__(self):
         super().__init__()
-        self.is_class = False   # True: struct
+        self.is_struct = False   # True: struct
         self.members = []   # ObjectCodeMember[]
     
     def to_code(self, indent_depth, formatting):
@@ -102,7 +102,7 @@ class ObjectCodeBlock(CodeBlock):
 
         indentation = to_indentation(indent_depth, formatting)
 
-        result_object_category = 'class' if self.is_class else 'struct'
+        result_object_category = 'struct' if self.is_struct else 'class'
 
         text += indentation + 'public {} {}'.format(result_object_category, self.name) + formatting.line_sep
         text += indentation + '{' + formatting.line_sep

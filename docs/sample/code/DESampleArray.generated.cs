@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 
-public struct DESampleArray_StructColArr
+public class DESampleArray_StructColArr
 {
     public string name;
     public int value;
 }
 
-public struct DESampleArray_StructRowArr
+public class DESampleArray_StructRowArr
 {
     public string name;
     public int value;

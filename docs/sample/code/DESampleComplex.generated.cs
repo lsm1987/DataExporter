@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-public struct DEContentsExp
+public class DEContentsExp
 {
     /// <summary>
     /// 계정 경험치
@@ -16,7 +16,7 @@ public struct DEContentsExp
 /// <summary>
 /// 보상 획득 조건
 /// </summary>
-public struct DESampleComplex_Rewards_Condition
+public class DESampleComplex_Rewards_Condition
 {
     /// <summary>
     /// 최초 클리어
@@ -32,7 +32,7 @@ public struct DESampleComplex_Rewards_Condition
 /// <summary>
 /// 보상 획득 시 메시지
 /// </summary>
-public struct DESampleComplex_Rewards_Messages
+public class DESampleComplex_Rewards_Messages
 {
     /// <summary>
     /// 메시지
@@ -45,7 +45,7 @@ public struct DESampleComplex_Rewards_Messages
     public float delay;
 }
 
-public struct DESampleComplex_Rewards
+public class DESampleComplex_Rewards
 {
     /// <summary>
     /// 아이템 ID
